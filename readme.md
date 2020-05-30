@@ -6,4 +6,12 @@ Para executá-lo é necessário possuir o `cargo` instalado, após isso seguir o
 
 1. Abrir a pasta que contém os arquivos jogo no Terminal.
 
-2. Executar o comando `cargo run`
+2. Executar o comando `cargo build`
+
+O cargo irá gerar uma sub-pasta chamada `../target/release/`
+
+3. Entre `cd` na pasta `jogo_forca/target/release/`
+
+4. Digite `./jogo_forca`.
+
+5. Jogue!
