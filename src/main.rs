@@ -96,8 +96,7 @@ fn game_playing(result: &str) -> () {
 
 
         let mut dashes: String = String::from("");
-        //TODO: Adicionar print de underlines.
-        // println!("{}", " _".repeat(resultado.graphemes(true).count()));
+
         for &i in compo.iter() {
             if out_vec.iter().any(|&x| x == i) {
                 dashes.push_str(i);
@@ -107,7 +106,14 @@ fn game_playing(result: &str) -> () {
             }
         }        
 
-        println!("{}", dashes); // printa os dashes
+        if !dashes.contains("_") {
+            println!("Parabéns, você ganhou!\nPara sair digite '!sair', ou só continue jogando!");
+            thread::sleep(time::Duration::from_secs(2));
+
+
+        }
+
+        println!("{}", &dashes); // printa os dashes
 
         // Se o usuário esgotar suas tentativas => Avisa que o jogo acabou e quebra a app
         // Se ter somente uma chance, avisar e continuar o jogo
@@ -133,9 +139,7 @@ fn game_playing(result: &str) -> () {
 
             panic!("Aplicação encerrada por comando do usuário.")
         } else if out_vec.iter().any(|&e| e==input.trim()){
-            //FIXME:
-            // tem um problema aqui, quando letras se repetem (como a letra O em óculos), 
-            // ele aponta que a letra já existe, portanto n pode ser inputada.
+
             println!("Você já chutou '{}', e acertou, tente novamente com outra letra.", &input.trim());
             solver(resultado, tries, compo, out_vec);
 
