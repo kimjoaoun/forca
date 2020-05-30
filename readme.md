@@ -1,6 +1,5 @@
-## Forca no Cargo
-
-Este repositório contém um código em Rust que simula o jogo da forca - jogo em que consiste em você acertar a palavra por meio de chutes.
+## Forca CLI
+Este repositório contém um código em Rust que simula o jogo da forca - jogo em que consiste em você acertar a palavra por meio de chutes. A interface é totalmente em linha de comando (CLI).
 
 Para executá-lo é necessário possuir o `cargo` instalado, após isso seguir os passos:
 
