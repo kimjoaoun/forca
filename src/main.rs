@@ -1,7 +1,10 @@
 use rand::Rng;
 use std::{io, thread, time};
+use unicode_segmentation::UnicodeSegmentation;
 
 fn main() {
+    println!("Primeiro Projeto em Rust: Jogo da Forca \n\n\n");
+
     welcome_message(your_name());
 
     let resposta = sorted();
@@ -64,67 +67,53 @@ fn game_f(result: &str) {
 
     println!(
         "> Ok, achei a palavra perfeita para nosso jogo, ela tem: {} letras. \nAgora é sua vez, insira seus chutes!",
-        result.len()
+        result.graphemes(true).count()  
     );
 }
 
-fn game_playing(result: &str) {
+
+
+
+fn game_playing(result: &str) -> () {
     // let mut tentativas: i32 = 6; // numero total de tentativas, valor fixo.
-    let mut input = String::new();
-    
-    //
+    let letters = UnicodeSegmentation::graphemes(result, true).collect::<Vec<&str>>();
+    let out_vec: Vec<&str> = Vec::new();
+    let tentativas: i32 = 6;
 
-    println!("> {} \n > Por favor, insira seu chute", 
-    "_ ".repeat(result.len())); // conta a quantidade de espaços e printa eles.
+    solver(result, tentativas, letters, out_vec);
 
-
-    io::stdin()
+    fn solver(resultado: &str, tries:i32, compo: Vec<&str>, out_vec: Vec<&str>){
+        
+        if &tries == &0 {
+            println!("Oops, infelizmente suas chances acabaram, não foi dessa vez.\nO jogo será terminado em 5 segundos.");
+            thread::sleep(time::Duration::from_secs(5));
+            panic!("Jogo terminado.");
+        } else if &tries == &1 {
+            println!("Ei, só lhe resta mais uma tentativa!");   
+        }   
+        
+        let mut input = String::new();
+        
+        io::stdin()
         .read_line(&mut input)
         .expect("ERR: Erm... Acho que não entendi direito.");
-
-    let input = input.trim();
-
-    println!("> resposta: óculos");    // DEBUGGING LINE
-    
-
-    if &input.to_string() == &result.to_string() {
-        println!("> Parabéns, você acertou essa de primeira! A resposta era: {}.", 
-        &input);
-
-       // break; // descomentar o break quando colocar dentro do loop.
-    } else {
-        break_checkeq(&input.to_string(), &result.to_string());
-    }
+        
+        
 
 
-    fn break_checkeq(process: &String, result: &str) -> String {
-        // Checa a similaridade entre palavras, e retorna o resultado.
-      
-        let mut compl = " _".repeat(result.len());
-       
-        // TODO: daqui para baixo, nada foi testado.
-        if result.contains(&process.to_string()){
-            println!("> Você acertou! '{}' faz parte da resposta.", &process);
-            
-
-            // temos um problema aqui. precisamos encontrar o index da letra que desejamos substituir.
-             let loc_guess = &result.chars().position(|c| c == &process.to_string()).unwrap();
-
-            
-
-            for i in loc_guess {
-               
-                compl.replace_range(i+1..&(i+2), &process);
-            }
-
-            println!(">{}", &compl);
-            compl
+        if compo.iter().any(|&i| i==input) {
+            println!("Isso! '{}' é uma letra que faz parte da nossa palavra", &input);
+            let mut out = out_vec.clone();
+            out.push(&input);
+            solver(resultado, tries, compo, out);
 
         } else {
-            compl
+            println!("Oops! Não foi dessa vez, lhe restam {} tentativas", &tries-1);
+
+            solver(resultado, tries-1, compo, out_vec);
+
         }
+        
+
     }
-
-
-    // println!("> {} e {}", input.trim(), tentativas);  
 }
