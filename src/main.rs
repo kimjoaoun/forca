@@ -48,7 +48,7 @@ fn sorted() -> (&'static str, usize) {
     // sorteia um valor de poss, e retorna uma tuple com a palavra sorteada e o tamanho da palavra.
     let poss = [
         "oculos",
-    /*  "telegrama",
+        "telegrama",
         "pacote",
         "ferrugem",
         "editor",
@@ -62,12 +62,12 @@ fn sorted() -> (&'static str, usize) {
         "casar",
         "coruja",
         "castelo",
-        "pacotes" */
+        "pacotes",
     ];
 
     let index = rand::thread_rng().gen_range(0, poss.len());
 
-    (poss[index], poss[index].len())
+    (poss[index], poss[index].graphemes(true).count())
 }
 
 fn game_f(result: &str) {
