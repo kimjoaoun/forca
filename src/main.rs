@@ -48,12 +48,21 @@ fn sorted() -> (&'static str, usize) {
     // sorteia um valor de poss, e retorna uma tuple com a palavra sorteada e o tamanho da palavra.
     let poss = [
         "oculos",
-        //"telegrama",
-        //"pacote",
-        //"ferrugem",
-        //"editor",
-        //"casa",
-        //"celular",
+    /*  "telegrama",
+        "pacote",
+        "ferrugem",
+        "editor",
+        "casa",
+        "celular",
+        "atraso",
+        "correto",
+        "inconstitucionalidade",
+        "notificado",
+        "chato",
+        "casar",
+        "coruja",
+        "castelo",
+        "pacotes" */
     ];
 
     let index = rand::thread_rng().gen_range(0, poss.len());
@@ -83,7 +92,25 @@ fn game_playing(result: &str) -> () {
     solver(result, tentativas, letters, out_vec);
 
     fn solver(resultado: &str, tries:i32, compo: Vec<&str>, out_vec: Vec<&str>){
-        
+
+
+
+        let mut dashes: String = String::from("");
+        //TODO: Adicionar print de underlines.
+        // println!("{}", " _".repeat(resultado.graphemes(true).count()));
+        for &i in compo.iter() {
+            if out_vec.iter().any(|&x| x == i) {
+                dashes.push_str(i);
+            } else {
+                let uline: String = String::from(" _ ");
+                dashes.push_str(&uline);
+            }
+        }        
+
+        println!("{}", dashes); // printa os dashes
+
+        // Se o usuário esgotar suas tentativas => Avisa que o jogo acabou e quebra a app
+        // Se ter somente uma chance, avisar e continuar o jogo
         if &tries == &0 {
             println!("Oops, infelizmente suas chances acabaram, não foi dessa vez.\nO jogo será terminado em 5 segundos.");
             thread::sleep(time::Duration::from_secs(5));
@@ -97,14 +124,26 @@ fn game_playing(result: &str) -> () {
         io::stdin()
         .read_line(&mut input)
         .expect("ERR: Erm... Acho que não entendi direito.");
-        
-        
+
+        if input.trim() == "!ajuda" {
+            println!("{}",help_fun());
+
+            solver(resultado, tries, compo, out_vec);
+        } else if input.trim() == "!sair" {
+
+            panic!("Aplicação encerrada por comando do usuário.")
+        } else if out_vec.iter().any(|&e| e==input.trim()){
+            //FIXME:
+            // tem um problema aqui, quando letras se repetem (como a letra O em óculos), 
+            // ele aponta que a letra já existe, portanto n pode ser inputada.
+            println!("Você já chutou '{}', e acertou, tente novamente com outra letra.", &input.trim());
+            solver(resultado, tries, compo, out_vec);
 
 
-        if compo.iter().any(|&i| i==input) {
-            println!("Isso! '{}' é uma letra que faz parte da nossa palavra", &input);
+        } else if compo.iter().any(|&i| i==input.trim()) {
+            println!("Isso! '{}' é uma letra que faz parte da nossa palavra", &input.trim());
             let mut out = out_vec.clone();
-            out.push(&input);
+            out.push(&input.trim());
             solver(resultado, tries, compo, out);
 
         } else {
@@ -116,4 +155,10 @@ fn game_playing(result: &str) -> () {
         
 
     }
+}
+
+fn help_fun() -> String {
+    // Documentação de ajuda com as instruções do jogo.
+    String::from("---inicio da seção de ajuda---\n> Não tem muito mistério, vamos lá...\nSempre que aparecerem underlines (_) significa que é a sua vez de digitar as letras.\nVocê pode (1) tentar letra-a-letra ou (2) tentar acertar a palavra inteira.
+Caso opte pela primeira alternativa, terá 6 chances.\nCaso opte pela segunda, terá somente uma chance.\nCom o termino do jogo, a aplicação se encerrará.\n\nO uso do comando '!sair' encerra o jogo\n---fim da seção de ajuda---\n Insira seu chute.\n")
 }
